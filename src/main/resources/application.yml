@@ -1,0 +1,82 @@
+info:
+  tag: ${IMAGE_TAG}
+  build:
+    artifact: ${PROJECT_ARTIFACT_ID}
+    name: ${PROJECT_NAME}
+    version: ${PROJECT_VERSION}
+    build: ${BUILD_DT}
+
+logging:
+  level:
+    org.springframework: ERROR
+    io.cskript.mynt: DEBUG
+
+
+spring:
+  main:
+    banner-mode: off
+
+parcel-rules:
+  -
+    priority: 1
+    name: Reject
+    weight-min: 50
+    condition: exceed
+  -
+    priority: 2
+    name: Heavy Parcel
+    weight-min: 10
+    weight-max: 50
+    condition: exceed
+    cost: 20
+  -
+    priority: 3
+    name: Small Parcel
+    volume: 1500
+    condition: less
+    cost: 0.03
+  -
+    priority: 4
+    name: Medium Parcel
+    volume: 2500
+    condition: less
+    cost: 0.04
+  -
+    priority: 5
+    name: Large Parcel
+    condition: exceed
+    cost: 0.05
+
+service:
+  mynt:
+    key: apikey
+
+---
+spring.config.activate.on-profile: local
+
+service:
+  common:
+    description: Local Environment 
+    host:
+      mynt: https://mynt-exam.mocklab.io
+
+
+---
+spring.config.activate.on-profile: pt
+
+service:
+  common:
+    description: Pre-Production (for integration testing)
+    host:
+      mynt: https://mynt-exam.mocklab.io
+
+
+---
+spring.config.activate.on-profile: pr
+
+service:
+  common:
+    description: Production
+    host:
+      mynt: https://mynt-exam.mocklab.io
+
